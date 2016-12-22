@@ -1,10 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector: 'my-app',
-    template: '<h1>{{title}}<h1><h2>My name is: {{myName}}<h2>'
+  selector: 'my-app',
+  encapsulation: ViewEncapsulation.None,
+  template: `
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  `
 })
-export class AppComponent  {
-    title = 'Angular2 Demo';
-    myName = 'Shem';
+export class AppComponent {
+  ngOnInit() {
+    console.log('Initial App State');
+  }
+
 }

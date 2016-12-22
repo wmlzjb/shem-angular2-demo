@@ -6,6 +6,7 @@ const helpers = require('./helpers');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const METADATA = {
   title: 'Shem Angular2 Demo',
@@ -22,7 +23,7 @@ module.exports = function (options) {
       'main': './src/main.browser.ts'
     },
     resolve: {
-      extensions: ['.ts', '.js', '.json'],
+      extensions: ['.ts', '.js', '.json', '.css'],
       modules: [helpers.root('src'), 'node_modules']
     },
     module: {
@@ -40,8 +41,12 @@ module.exports = function (options) {
           loader: 'json-loader'
         },
         {
+          test: /\.scss$/,
+          loaders: ['to-string-loader', 'css-loader', 'sass-loader']
+        },
+        {
           test: /\.css$/,
-          loaders: ['to-string-loader', 'css-loader']
+          loader: ExtractTextPlugin.extract({fallbackLoader: 'style-loader', loader: 'css-loader'})
         },
         {
           test: /\.html$/,
@@ -51,10 +56,15 @@ module.exports = function (options) {
         {
           test: /\.(jpg|png|gif)$/,
           loader: 'file'
+        },
+        {
+          test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+          loader: 'file-loader'
         }
       ]
     },
     plugins: [
+      new ExtractTextPlugin('styles.css'),
       /**
        * Plugin: ContextReplacementPlugin
        * Description: Provides context to Angular's use of System.import
